@@ -1,6 +1,10 @@
 const net = require('net')
 const uuid = require('uuid')
+
 const usernameRegex = /\/username/gi
+const kickRegex = /\/kick/gi
+const wRegex = /\/w/gi
+
 let clientsArr = []
 
 
@@ -53,6 +57,10 @@ let server = net.createServer(client => {
                 client.write(`${newUserName} is not available. Please choose a different username.`)
             }
             
+        } else if (strData.match(kickRegex)) {
+            console.log('--- kicking someone out ---')
+        } else if (strData.match(wRegex)) {
+            console.log('--- shh, be very very quiet. ---')
         } else {
             console.log(strData)
         }
