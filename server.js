@@ -5,6 +5,7 @@ const password = 'password1'
 const usernameRegex = /\/username/gi
 const kickRegex = /\/kick/gi
 const wRegex = /\/w/gi
+const listRegex = /\/list/gi
 
 let clientsArr = []
 
@@ -65,16 +66,37 @@ let server = net.createServer(client => {
             if (enteredPassword === password) {
                 console.log(`--- Kicking user: ${userToKick} ---`)
                 let position = clientsArr.map(ele => ele.userName).indexOf(userToKick)
-                clientsArr.splice(position, 1)
-                console.log(`${userToKick} has been kicked`)
-                console.log(`------ End ------`)
-                client.write(`${userToKick} has been kicked`)
+
+                if (position) {
+                    clientsArr[position].write('You are being kicked from the server.\n BYEEEE!')
+    
+                    let newArr = kickClient(position)
+    
+                    newArr.forEach(client => {
+                        client.write(`${userToKick} has been kicked from the server`)
+                    })
+
+                    console.log(`${userToKick} has been kicked from the server`)
+                } else {
+                    client.write('That user does not exist.')
+                }
+                
+                console.log(`------ End Kick Message ------`)
+
             } else {
                 client.write('Incorrect Password.')
             }
 
         } else if (strData.match(wRegex)) {
             console.log('--- shh, be very very quiet. ---')
+
+        } else if (strData.match(listRegex)) {
+            let clientList = []
+            clientsArr.forEach((ele, i) => {
+                client.write(`${i+1}: ${ele.userName}`)
+            })
+            // client.write(clientList)
+
         } else {
             console.log(strData)
         }
@@ -96,4 +118,11 @@ function updateClientArr (obj) {
             clientEle[i] = obj
         }
     })
+}
+
+function kickClient (num) {
+    let newClientsArr = clientsArr.slice()
+    newClientsArr.splice(num, 1)
+    clientsArr = newClientsArr
+    return newClientsArr
 }
