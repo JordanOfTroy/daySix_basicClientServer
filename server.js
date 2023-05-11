@@ -1,6 +1,7 @@
 const net = require('net')
 const uuid = require('uuid')
 
+const password = 'password1'
 const usernameRegex = /\/username/gi
 const kickRegex = /\/kick/gi
 const wRegex = /\/w/gi
@@ -32,8 +33,6 @@ let server = net.createServer(client => {
             let oldUserName = currUser[0].userName
             let newUserName = strData.split(' ')[1]
             let userNamePass = true
-
-            
             
             clientsArr.forEach(clientEle => {
                 if (clientEle.userName === newUserName) {
@@ -59,6 +58,21 @@ let server = net.createServer(client => {
             
         } else if (strData.match(kickRegex)) {
             console.log('--- kicking someone out ---')
+            let splitDataArr = strData.split(' ')
+            let userToKick = splitDataArr[1]
+            let enteredPassword = splitDataArr[2]
+
+            if (enteredPassword === password) {
+                console.log(`--- Kicking user: ${userToKick} ---`)
+                let position = clientsArr.map(ele => ele.userName).indexOf(userToKick)
+                clientsArr.splice(position, 1)
+                console.log(`${userToKick} has been kicked`)
+                console.log(`------ End ------`)
+                client.write(`${userToKick} has been kicked`)
+            } else {
+                client.write('Incorrect Password.')
+            }
+
         } else if (strData.match(wRegex)) {
             console.log('--- shh, be very very quiet. ---')
         } else {
@@ -82,5 +96,4 @@ function updateClientArr (obj) {
             clientEle[i] = obj
         }
     })
-    // console.log(`clientArr: ${clientsArr}`)
 }
