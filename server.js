@@ -91,12 +91,9 @@ let server = net.createServer(client => {
             console.log('--- shh, be very very quiet. ---')
 
         } else if (strData.match(listRegex)) {
-            let clientList = []
             clientsArr.forEach((ele, i) => {
                 client.write(`${i+1}: ${ele.userName}`)
             })
-            // client.write(clientList)
-
         } else {
             console.log(strData)
         }
