@@ -1,7 +1,7 @@
 const net = require('net')
 const uuid = require('uuid')
 
-const password = 'password1'
+const password = '1'
 const usernameRegex = /\/username/gi
 const kickRegex = /\/kick/gi
 const wRegex = /\/w/gi
@@ -68,7 +68,8 @@ let server = net.createServer(client => {
                 let position = clientsArr.map(ele => ele.userName).indexOf(userToKick)
 
                 if (position) {
-                    clientsArr[position].write('You are being kicked from the server.\n BYEEEE!')
+                    clientsArr[position].write('You are being kicked from the server.\nBYEEEE!')
+                    clientsArr[position].destroy()
     
                     let newArr = kickClient(position)
     

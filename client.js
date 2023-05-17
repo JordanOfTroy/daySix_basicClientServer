@@ -13,3 +13,7 @@ client.on('data', (data) => {
 process.stdin.on('data', (data) => {
     client.write(data)
 })
+
+client.on('end', () => {
+    process.exit()
+})
